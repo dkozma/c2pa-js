@@ -7,7 +7,6 @@ import 'c2pa-wc/dist/components/panels/ManifestSummary';
 import 'c2pa-wc/dist/components/panels/PanelSection';
 import { ManifestSummary } from 'c2pa-wc/dist/components/panels/ManifestSummary';
 import './App.css';
-import sampleImage from '../assets/CAICAI.jpg?url';
 import {
   C2paReadResult,
   generateVerifyUrl,
@@ -15,6 +14,8 @@ import {
   SerializableManifestData,
 } from 'c2pa';
 import { Resolvers } from './main';
+
+const sampleImage = 'https://cdn.jsdelivr.net/gh/contentauth/c2pa-js/tests/assets/CAICAI.jpg';
 
 interface ManifestInfoProps {
   manifest: Manifest<Resolvers>;
