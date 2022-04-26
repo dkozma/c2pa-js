@@ -38,9 +38,7 @@ function expectMatchesValidation(this: TestContext) {
   const activeLabel = this.data.activeManifest;
   const activeManifest = this.data.manifests[activeLabel];
   const expected = this.fixture!.validation_status;
-  expect(activeManifest.errors).toEqual(
-    jasmine.arrayContaining(expected ?? []),
-  );
+  expect(activeManifest.errors).toEqual(expected ?? []);
 }
 
 export function itMatchesFixture(this: TestContext) {
@@ -105,7 +103,11 @@ export function itMatchesFixture(this: TestContext) {
       const expected = this.fixture!.manifests[manifestId];
 
       expected.ingredients.forEach((expectedIngredient) => {
-        const { ingredient, manifestId, thumbnail } = manifest.ingredients.find(
+        const {
+          ingredient,
+          manifestId: ingredientManifestId,
+          thumbnail,
+        } = manifest.ingredients.find(
           (x: any) =>
             x.ingredient.instanceID === expectedIngredient.instance_id,
         );
@@ -124,7 +126,9 @@ export function itMatchesFixture(this: TestContext) {
             ? jasmine.arrayContaining(expectedValidationStatus)
             : undefined,
         );
-        expect(manifestId).toEqual(expectedIngredient.active_manifest);
+        expect(ingredientManifestId).toEqual(
+          expectedIngredient.active_manifest,
+        );
       });
     });
   });

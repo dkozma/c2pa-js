@@ -11,17 +11,17 @@ use std::collections::HashMap;
 use crate::error::{Error as SdkError, Result};
 use c2pa_toolkit::{
     assertion::{Assertion, AssertionData, AssertionExtractor},
-    assertions::{Ingredient, Thumbnail},
+    assertions::{labels, Ingredient, Thumbnail},
     claim::Claim,
-    labels::*,
+    labels::to_absolute_uri,
     store::Store,
     validation_status::ValidationStatus,
 };
 
 const FILTER_LABELS: [&str; 3] = [
-    CLAIM_THUMBNAIL_LABEL_BASE,
-    INGREDIENT_THUMBNAIL_LABEL_BASE,
-    INGREDIENT_LABEL_BASE,
+    labels::CLAIM_THUMBNAIL,
+    labels::INGREDIENT_THUMBNAIL,
+    Ingredient::LABEL,
 ];
 
 #[derive(Serialize)]
@@ -45,7 +45,7 @@ impl ResolvedAssertion {
         let label = assertion.label();
 
         match label.as_str() {
-            INGREDIENT_LABEL_BASE => {
+            Ingredient::LABEL => {
                 let ingredient = Ingredient::extract_assertion(assertion)?;
 
                 // Get the thumbnail from an ingredient, if it exists
@@ -70,7 +70,7 @@ impl ResolvedAssertion {
                 }))
             }
             label => {
-                if label.starts_with(THUMBNAIL_LABEL_BASE) {
+                if label.starts_with(labels::THUMBNAIL) {
                     Ok(Self::Thumbnail(Thumbnail::extract_assertion(assertion)?))
                 } else {
                     Self::from_user_assertion(assertion)
@@ -151,7 +151,7 @@ impl ManifestEntry {
         fetched
             .iter()
             // Filter claim and ingredient thumbnails since we will be processing these separately
-            .filter(|a| a.label().starts_with(INGREDIENT_LABEL_BASE))
+            .filter(|a| a.label().starts_with(Ingredient::LABEL))
             .map(|a| ResolvedAssertion::from_assertion(a, claim, store))
             .collect()
     }
@@ -160,7 +160,7 @@ impl ManifestEntry {
     fn get_claim_thumbnail(fetched: &[&Assertion]) -> Result<Option<Thumbnail>> {
         fetched
             .iter()
-            .find(|a| a.label().starts_with(CLAIM_THUMBNAIL_LABEL_BASE))
+            .find(|a| a.label().starts_with(labels::CLAIM_THUMBNAIL))
             .map(|a| Thumbnail::extract_assertion(a))
             .map_or(Ok(None), |t| t.map(Some))
             .map_err(|_err| SdkError::IngredientThumbnailExtraction)

@@ -192,7 +192,7 @@ dependencies = [
 [[package]]
 name = "c2pa_toolkit"
 version = "0.12.5"
-source = "git+ssh://git@github.com/contentauth/c2pa-toolkit.git?rev=b6212d7#b6212d7670a0a3cc152f93a793666ef1d7826f8b"
+source = "git+ssh://git@github.com/contentauth/c2pa-toolkit.git?rev=40fe4a1#40fe4a1eed9ace94bc3bd4fdcccc05e2ea5df435"
 dependencies = [
  "base64 0.12.3",
  "bcder",

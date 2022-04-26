@@ -25,7 +25,7 @@ wasm-bindgen-futures = "0.4.29"
 
 [dependencies.c2pa_toolkit]
 git = "ssh://git@github.com/contentauth/c2pa-toolkit.git"
-rev = "b6212d7"
+rev = "40fe4a1"
 
 [dependencies.web-sys]
 version = "0.3.56"
