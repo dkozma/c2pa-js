@@ -35,6 +35,15 @@ jobs:
           BROWSERSTACK_USER: ${{ secrets.BROWSERSTACK_USER }}
           BROWSERSTACK_KEY: ${{ secrets.BROWSERSTACK_KEY }}
         run: yarn test:ci
+      - name: Run example tests
+        run: |
+          yarn workspace c2pa link
+          yarn workspace @contentauth/toolkit link
+          pushd examples/minimal-ts-vite
+          yarn install
+          yarn link c2pa @contentauth/toolkit
+          yarn test
+          popd
       - name: Create build archive
         run: |
           tar cvfz build.tar.gz \
