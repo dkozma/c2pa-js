@@ -12,17 +12,23 @@ const sampleImage =
     workerSrc,
   });
 
-  const { manifestStore } = await c2pa.read(sampleImage);
+  const { manifestStore } = await c2pa.read(
+    sampleImage,
+  );
   const activeManifest = manifestStore?.activeManifest;
-  const firstAction =
-    activeManifest?.assertions.get('c2pa.actions')?.actions?.[0];
+  const firstAction = activeManifest?.assertions.get(
+    'c2pa.actions',
+  )?.actions?.[0];
 
+  // Log results to the console
   console.log('manifestStore', manifestStore);
   console.log('activeManifest', activeManifest);
 
   // Querying the active manifest
   expect(activeManifest?.title).toEqual('CAICAI.jpg');
-  expect(activeManifest?.producer?.name).toEqual('Gavin Peacock');
+  expect(activeManifest?.producer?.name).toEqual(
+    'Gavin Peacock',
+  );
   expect(activeManifest?.signature.date).toEqual(
     new Date('2022-04-20T22:44:41.000Z'),
   );
