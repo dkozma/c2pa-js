@@ -1,41 +1,24 @@
 import { createC2pa } from 'c2pa';
 import wasmSrc from 'c2pa/dist/assets/wasm/toolkit_bg.wasm?url';
 import workerSrc from 'c2pa/dist/c2pa.worker.js?url';
-import expect from '@storybook/expect';
 
 const sampleImage =
   'https://cdn.jsdelivr.net/gh/contentauth/c2pa-js/tests/assets/CAICAI.jpg';
 
 (async () => {
+  // Initialize the c2pa-js SDK
   const c2pa = await createC2pa({
     wasmSrc,
     workerSrc,
   });
 
+  // Read in our sample image and get a manifest store
   const { manifestStore } = await c2pa.read(
     sampleImage,
   );
-  const activeManifest = manifestStore?.activeManifest;
-  const firstAction = activeManifest?.assertions.get(
-    'c2pa.actions',
-  )?.actions?.[0];
-
-  // Log results to the console
   console.log('manifestStore', manifestStore);
-  console.log('activeManifest', activeManifest);
 
-  // Querying the active manifest
-  expect(activeManifest?.title).toEqual('CAICAI.jpg');
-  expect(activeManifest?.producer?.name).toEqual(
-    'Gavin Peacock',
-  );
-  expect(activeManifest?.signature.date).toEqual(
-    new Date('2022-04-20T22:44:41.000Z'),
-  );
-  expect(firstAction).toMatchObject({
-    action: 'c2pa.edited',
-    parameters: {
-      name: 'import',
-    },
-  });
+  // Get the active manifest
+  const activeManifest = manifestStore?.activeManifest;
+  console.log('activeManifest', activeManifest);
 })();
