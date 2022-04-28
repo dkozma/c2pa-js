@@ -14,32 +14,30 @@ let output: string[] = [];
     workerSrc,
   });
 
-  const { manifestStore, source } = await c2pa.read(
-    sampleImage,
-  );
+  const { manifestStore, source } = await c2pa.read(sampleImage);
   const activeManifest = manifestStore?.activeManifest;
   if (activeManifest) {
     // Get thumbnail
     // Note: You would normally call `dispose()` when working with a
     // component-based UI library (e.g. on component un-mount)
-    const { data, dispose } =
-      source.thumbnail.getUrl();
+    const { data, dispose } = source.thumbnail.getUrl();
 
     // Get properties
     properties.title = activeManifest.title;
+    properties.format = activeManifest.format;
     properties.label = activeManifest.label;
     properties.claimGenerator =
       activeManifest.claimGenerator.product;
     properties.producer =
       activeManifest.producer?.name ?? 'Unknown';
     properties.thumbnail = `<img src="${data.url}" class="thumbnail" />`;
-    properties.ingredients = (
-      activeManifest.ingredients ?? []
-    )
+    properties.ingredients = (activeManifest.ingredients ?? [])
       .map((i) => i.title)
       .join(', ');
-
-    console.log('manifestStore', manifestStore);
+    properties.signatureIssuer = activeManifest.signature.issuer;
+    properties.signatureDate =
+      activeManifest.signature.date?.toString() ??
+      'No date available';
 
     output = Object.keys(properties).map((key) => {
       return `
