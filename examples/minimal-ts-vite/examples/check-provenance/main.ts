@@ -21,6 +21,9 @@ const output = [];
     const { manifestStore, source } = await c2pa.read(
       sampleImage,
     );
+    // We can get the filename of the asset that was loaded from
+    // the `source` object
+    const filename = source.metadata.filename;
     // Note: You would normally call `dispose()` when working with a
     // component-based UI library (e.g. on component un-mount)
     const { data, dispose } =
@@ -31,7 +34,7 @@ const output = [];
         <td><img src="${
           data.url
         }" class="thumbnail" /></td>
-        <td>${source.metadata.filename}</td>
+        <td>${filename}</td>
         <td>${!!manifestStore ? 'Yes' : 'No'}</td>
       </tr>
     `);
