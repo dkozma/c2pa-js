@@ -13,12 +13,14 @@ const sampleImage =
   });
 
   // Read in our sample image and get a manifest store
-  const { manifestStore } = await c2pa.read(
-    sampleImage,
-  );
-  console.log('manifestStore', manifestStore);
+  try {
+    const { manifestStore } = await c2pa.read(sampleImage);
+    console.log('manifestStore', manifestStore);
 
-  // Get the active manifest
-  const activeManifest = manifestStore?.activeManifest;
-  console.log('activeManifest', activeManifest);
+    // Get the active manifest
+    const activeManifest = manifestStore?.activeManifest;
+    console.log('activeManifest', activeManifest);
+  } catch (err) {
+    console.error('Error reading image:', err);
+  }
 })();
