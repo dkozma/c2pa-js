@@ -8,10 +8,10 @@
  */
 
 import { LitElement, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { defaultStyles } from '../styles';
 import { exportParts, importParts } from '../directives/ExportParts';
-import { Popover } from './Popover';
+import { Popover, Placement } from './Popover';
 import '../../assets/svg/monochrome/help.svg';
 
 declare global {
@@ -30,10 +30,16 @@ export class Tooltip extends LitElement {
     ...importParts(Popover.cssParts, Tooltip.popoverPrefix),
   };
 
+  @property({ type: String })
+  placement: Placement = 'auto';
+
   static get styles() {
     return [
       defaultStyles,
       css`
+        :host {
+          display: inline-block;
+        }
         #trigger {
           --cai-icon-width: var(--cai-popover-icon-width, 16px);
           --cai-icon-height: var(--cai-popover-icon-height, 16px);
@@ -62,7 +68,7 @@ export class Tooltip extends LitElement {
     return html`
       <cai-popover
         id="popover"
-        placement="auto"
+        placement=${this.placement}
         ?interactive=${false}
         part-prefix=${Tooltip.popoverPrefix}
         exportparts=${exportParts(Popover.cssParts, Tooltip.popoverPrefix)}

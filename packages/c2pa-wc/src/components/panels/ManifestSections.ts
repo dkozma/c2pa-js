@@ -10,7 +10,8 @@ import { Icon } from '../Icon';
 import { Thumbnail } from '../Thumbnail';
 import { PanelSection } from './PanelSection';
 import { exportParts } from '../../directives/ExportParts';
-import { html, TemplateResult } from 'lit';
+import { html as litHtml, TemplateResult } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 export interface SectionConfig {
   stringMap: Record<string, string>;
@@ -22,7 +23,7 @@ interface SectionParams<
 > {
   manifest: SerializableManifestData<Resolvers>;
   config: Config;
-  html: typeof html;
+  html: typeof litHtml;
 }
 
 export type SectionTemplate = (params: SectionParams) => TemplateResult;
@@ -88,14 +89,14 @@ export function MinimumViableProvenance({
       >
         <cai-thumbnail
           class="minimum-viable-provenance-thumbnail"
-          part=${config.partMap?.thumbnail}
+          part=${ifDefined(config.partMap?.thumbnail)}
           src=${manifest.thumbnail}
           badge="none"
           exportparts=${exportParts(Thumbnail.cssParts)}
         ></cai-thumbnail>
         <div
           class="minimum-viable-provenance-signer"
-          part=${config.partMap?.signer}
+          part=${ifDefined(config.partMap?.signer)}
         >
           <cai-icon
             slot="icon"
@@ -111,7 +112,7 @@ export function MinimumViableProvenance({
         </div>
         <div
           class="minimum-viable-provenance-date"
-          part=${config.partMap?.date}
+          part=${ifDefined(config.partMap?.date)}
         >
           ${isValid(signatureDate)
             ? html`${config.dateFormatter(signatureDate!)}`

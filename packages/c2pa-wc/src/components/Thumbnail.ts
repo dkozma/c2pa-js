@@ -7,10 +7,9 @@
  * it.
  */
 
-import { LitElement, html, css, TemplateResult } from 'lit';
+import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { exportParts } from '../directives/ExportParts';
-import { nothing } from 'lit-html';
 import { defaultStyles } from '../styles';
 import { classPartMap } from '../utils';
 import { Tooltip } from './Tooltip';
@@ -149,18 +148,21 @@ export class Thumbnail extends LitElement {
                 <div slot="content">${this.badgeHelpText}</div>
                 <div
                   class="included-badge"
-                  ${Thumbnail.cssParts.badge}
+                  part=${Thumbnail.cssParts.badge}
                   slot="trigger"
                 >
                   ${Thumbnail.badgeMap[this.badge]}
                 </div>
               </cai-tooltip>`
-            : html`<div class="badge-no-tooltip" ${Thumbnail.cssParts.badge}>
+            : html`<div
+                class="badge-no-tooltip"
+                part=${Thumbnail.cssParts.badge}
+              >
                 ${Thumbnail.badgeMap[this.badge]}
               </div>`}
         </slot>
         ${!this.src
-          ? html`<div class="no-image" ${Thumbnail.cssParts.noImage}>
+          ? html`<div class="no-image" part=${Thumbnail.cssParts.noImage}>
               <cai-icon-broken-image></cai-icon-broken-image>
             </div>`
           : nothing}

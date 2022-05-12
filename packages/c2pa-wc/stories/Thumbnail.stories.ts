@@ -27,10 +27,10 @@ export default {
       },
     },
     badge: {
+      options: Object.keys(Thumbnail.badgeMap),
       defaultValue: 'none',
       control: {
         type: 'select',
-        options: Object.keys(Thumbnail.badgeMap),
       },
     },
     badgeHelpText: {
@@ -40,15 +40,16 @@ export default {
       },
     },
     theme: {
+      options: ['default', 'theme-spectrum'],
+      defaultValue: 'default',
       control: {
         type: 'select',
-        options: ['', 'theme-spectrum'],
       },
     },
   },
 } as Meta;
 
-export const Base: Story<ArgTypes> = ({
+const Base: Story<ArgTypes> = ({
   src,
   selected,
   badge,

@@ -40,10 +40,10 @@ export default {
       },
     },
     theme: {
-      defaultValue: '',
+      options: ['default', 'theme-spectrum'],
+      defaultValue: 'default',
       control: {
         type: 'select',
-        options: ['', 'theme-spectrum'],
       },
     },
   },

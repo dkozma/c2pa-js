@@ -11,6 +11,8 @@ import { PartPrefixable } from '../mixins/PartPrefixable';
 import { defaultStyles } from '../styles';
 import '../../assets/svg/monochrome/help.svg';
 
+export type { TippyProps, Placement };
+
 declare global {
   namespace JSX {
     interface IntrinsicElements {
