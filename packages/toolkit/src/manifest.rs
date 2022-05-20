@@ -9,20 +9,9 @@ use serde_json::Value;
 use std::collections::HashMap;
 
 use crate::error::{Error as SdkError, Result};
-use c2pa_toolkit::{
-    assertion::{Assertion, AssertionData, AssertionExtractor},
-    assertions::{Ingredient, Thumbnail},
-    claim::Claim,
-    labels::*,
-    store::Store,
-    validation_status::ValidationStatus,
-};
+use c2pa::validation_status::ValidationStatus;
 
-const FILTER_LABELS: [&str; 3] = [
-    CLAIM_THUMBNAIL_LABEL_BASE,
-    INGREDIENT_THUMBNAIL_LABEL_BASE,
-    INGREDIENT_LABEL_BASE,
-];
+const FILTER_LABELS: [&str; 0] = [];
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]

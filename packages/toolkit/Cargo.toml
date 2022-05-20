@@ -23,9 +23,9 @@ thiserror = "1.0.20"
 wasm-bindgen = {version = "0.2.79", features = ["serde-serialize"]}
 wasm-bindgen-futures = "0.4.29"
 
-[dependencies.c2pa_toolkit]
+[dependencies.c2pa]
 git = "ssh://git@github.com/contentauth/c2pa-toolkit.git"
-rev = "b6212d7"
+rev = "8812ad5"
 
 [dependencies.web-sys]
 version = "0.3.56"

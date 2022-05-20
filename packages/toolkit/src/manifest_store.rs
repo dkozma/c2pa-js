@@ -4,62 +4,69 @@
 // NOTICE: Adobe permits you to use, modify, and distribute this file in
 // accordance with the terms of the Adobe license agreement accompanying
 // it.
+use log::info;
 use serde::Serialize;
 use std::collections::HashMap;
+use wasm_bindgen_test::console_log;
+use web_sys::console;
 
 use crate::error::{Error, Result};
-use crate::manifest::ManifestEntry;
+// use crate::manifest::ManifestEntry;
 use crate::util::log_time;
-use c2pa_toolkit::{
-    status_tracker::{DetailedStatusTracker, StatusTracker},
-    store::Store,
-    validation_status::status_for_store,
-};
+use c2pa::ManifestStore;
 
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ManifestStoreResult {
-    active_manifest: Option<String>,
-    manifests: HashMap<String, ManifestEntry>,
-}
+// #[derive(Serialize)]
+// #[serde(rename_all = "camelCase")]
+// pub struct ManifestStoreResult {
+//     active_manifest: Option<String>,
+//     manifests: HashMap<String, ManifestEntry>,
+// }
 
-fn manifest_store_to_object(
-    store: &Store,
-    validation_log: &mut impl StatusTracker,
-) -> Result<ManifestStoreResult> {
+fn manifest_store_to_object(manifest_store: &ManifestStore) -> Result<()> {
     log_time("ManifestStore::manifest_store_to_object::start");
 
-    let status = status_for_store(store, validation_log);
-    let manifests: HashMap<String, ManifestEntry> = store
-        .claims()
-        .iter()
-        .map(|claim| {
-            ManifestEntry::from_claim(claim, store, &status)
-                .map(|entry| (claim.label().to_owned(), entry))
-        })
-        .collect::<Result<_>>()
-        .map_err(|err| Error::ManifestConversion(err.to_string()))?;
+    // log::info!("manifest_store.manifests: {:?}", manifest_store.manifests);
+    info!("{:?}", manifest_store.manifests);
+    console::log_1(&format!("{}", manifest_store).into());
 
-    log_time("ManifestStore::manifest_store_to_object::create_manifest_map");
+    // let manifests: HashMap<String, ManifestEntry> =
+    //     manifest_store.manifests.iter().map(|(key, manifest)| {
+    //         log::info!("manifest: {:?}", manifest);
+    //     });
+    // .claims()
+    // .iter()
+    // .map(|claim| {
+    //     ManifestEntry::from_claim(claim, store, &status)
+    //         .map(|entry| (claim.label().to_owned(), entry))
+    // })
+    // .collect::<Result<_>>()
+    // .map_err(|err| Error::ManifestConversion(err.to_string()))?;
 
-    Ok(ManifestStoreResult {
-        active_manifest: store.provenance_label(),
-        manifests,
-    })
+    // log_time("ManifestStore::manifest_store_to_object::create_manifest_map");
+
+    Ok(())
+    // Ok(ManifestStoreResult {
+    //     active_manifest: store.provenance_label(),
+    //     manifests,
+    // })
 }
 
-pub async fn get_manifest_store_data(data: &[u8], mime_type: &str) -> Result<ManifestStoreResult> {
-    let mut validation_log = DetailedStatusTracker::default();
+pub async fn get_manifest_store_data(data: &[u8], mime_type: &str) -> Result<()> {
+    // This should take a reference for image bytes and return a Result instead of an Option
+    let manifest_store = ManifestStore::from_bytes_async(mime_type, data.to_owned(), true)
+        .await
+        .unwrap();
+    console::log_2(&"got there".into(), &"ok".into());
 
-    let store = Store::load_from_memory_async(mime_type, data, true, &mut validation_log).await?;
+    log_time("ManifestStore::from_bytes_async");
 
-    log_time("Store::load_from_memory_async");
+    // if let Some(manifest_store) = manifest_store {
+    manifest_store_to_object(&manifest_store)?;
+    // }
 
-    let result = manifest_store_to_object(&store, &mut validation_log)?;
+    log_time("ManifestStore::from_bytes_async::end");
 
-    log_time("ManifestStore::manifest_store_to_object::end");
-
-    Ok(result)
+    Ok(())
 }
 
 #[cfg(test)]
@@ -77,14 +84,14 @@ pub mod tests {
         assert!(result.is_ok());
     }
 
-    #[wasm_bindgen_test]
-    pub async fn test_load_from_memory_async() {
-        let mut validation_log = DetailedStatusTracker::default();
-        let test_asset = include_bytes!("../../../tests/assets/CAICAI.jpg");
+    // #[wasm_bindgen_test]
+    // pub async fn test_load_from_memory_async() {
+    //     let mut validation_log = DetailedStatusTracker::default();
+    //     let test_asset = include_bytes!("../../../tests/assets/CAICAI.jpg");
 
-        let result =
-            Store::load_from_memory_async("image/jpeg", test_asset, true, &mut validation_log)
-                .await;
-        assert!(result.is_ok());
-    }
+    //     let result =
+    //         Store::load_from_memory_async("image/jpeg", test_asset, true, &mut validation_log)
+    //             .await;
+    //     assert!(result.is_ok());
+    // }
 }
